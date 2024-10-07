@@ -3,7 +3,7 @@
 module.exports = function () {
   var _this = this;
 
-  return this.$scopedSlots["default"]({
+  return this.$slots["default"]({
     source: this.source,
     theme: this.theme,
     opts: this.opts,

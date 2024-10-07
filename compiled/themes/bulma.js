@@ -4,8 +4,8 @@ module.exports = function () {
   return {
     framework: 'bulma',
     table: 'table is-bordered is-striped is-hoverable is-fullwidth',
-    tbody: '',
     row: 'columns',
+    thead: '',
     th: '',
     td: '',
     tr: '',
@@ -35,7 +35,7 @@ module.exports = function () {
       caret: 'fa fa-angle-down'
     },
     pagination: {
-      nav: 'has-text-centered',
+      nav: '',
       count: '',
       wrapper: 'pagination',
       list: 'pagination-list',

@@ -7,14 +7,16 @@ exports["default"] = void 0;
 
 var _merge = _interopRequireDefault(require("merge"));
 
+var _debounce = _interopRequireDefault(require("debounce"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var _default = {
   name: 'RLTableCell',
-  inject: ['row', 'theme', 'scopedSlots', 'orderBy', 'opts', 'render', 'index', 'setEditingCell', 'updateValue', 'revertValue', 'editing', 'getValue', 'columnClass', 'cellClasses', 'componentsOverride', 'isListFilter', 'optionText', 'source', 'dateFormat', 'formatDate', 'tabIndex'],
+  inject: ['row', 'slots', 'theme', 'orderBy', 'opts', 'render', 'index', 'setEditingCell', 'updateValue', 'revertValue', 'editing', 'getValue', 'columnClass', 'cellClasses', 'componentsOverride', 'isListFilter', 'optionText', 'source', 'dateFormat', 'formatDate', 'tabIndex'],
   props: ['column'],
   render: function render(h) {
-    return this.$scopedSlots["default"]({
+    return this.$slots["default"]({
       opts: this.opts(),
       row: this.Row,
       column: this.column,
@@ -35,21 +37,21 @@ var _default = {
   methods: {
     content: function content(h) {
       if (this.options.templates[this.column]) {
-        return this.render(this.Row, this.column, this.index(), h);
+        return this.render(this.Row, this.column, this.index, h);
       }
 
-      if (this.scopedSlots()[this.column]) {
+      if (this.slots()[this.column]) {
         var data = {
           row: this.Row,
           column: this.column,
-          index: this.index()
+          index: this.index
         };
 
         if (this.options.editableColumns.includes(this.column)) {
           data = (0, _merge["default"])(data, this.getEditFunctions());
         }
 
-        return this.scopedSlots()[this.column](data);
+        return this.slots()[this.column](data);
       }
 
       return this.formatCellContent(this.getValue(this.Row, this.column), this.column);
@@ -81,6 +83,7 @@ var _default = {
     getEditFunctions: function getEditFunctions() {
       return {
         update: this.updateValue(this.Row, this.column),
+        debouncedUpdate: (0, _debounce["default"])(this.updateValue(this.Row, this.column), this.options.debounce),
         isEditing: this.isEditing(),
         setEditing: this.setEditingCell(this.Row, this.column),
         revertValue: this.revertValue(this.Row, this.column)

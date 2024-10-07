@@ -1,5 +1,5 @@
 <template>
-    <tbody :class="props.theme.tbody">
+    <tbody>
     <vnodes :vnodes="props.slots.prependBody"/>
     <vt-no-results-row v-if="props.data.length === 0"/>
     <table-rows v-for="(row,index) in props.data"
@@ -13,36 +13,35 @@
 </template>
 
 <script>
-    import VtNoResultsRow from 'vue-tables-2/compiled/components/VtNoResultsRow'
-    import VtTableRow from 'vue-tables-2/compiled/components/VtTableRow'
-    import VtChildRow from 'vue-tables-2/compiled/components/VtChildRow'
+    import VtNoResultsRow from 'v-tables-3/compiled/components/VtNoResultsRow'
+    import VtTableRow from 'v-tables-3/compiled/components/VtTableRow'
+    import VtChildRow from 'v-tables-3/compiled/components/VtChildRow'
+    import {h} from "vue"
 
     export default {
         name: "MyTableBody",
         props: ['props'],
         components: {
             VtNoResultsRow,
-            VtTableRow,
-            VtChildRow,
             vnodes: {
                 functional: true,
-                render: (h, ctx) => ctx.props.vnodes
+                render: (ctx) => h(ctx.$attrs.vnodes)
             },
             TableRows: {
                 functional: true,
-                render(h, ctx) {
-                    var props = ctx.data.attrs;
+                render(ctx) {
+                    var props = ctx.$attrs;
 
                     // TODO: add group row
 
                     var data = [
-                        h('vt-table-row', {
+                        h(VtTableRow, {
                             props
                         })
                     ];
 
                     if (props.renderChildRow) {
-                        data.push(h('vt-child-row', {
+                        data.push(h(VtChildRow, {
                             props
                         }))
                     }

@@ -3,11 +3,11 @@
 module.exports = function () {
   return {
     framework: 'bootstrap4',
+    td: '',
+    thead: '',
     table: 'table table-striped table-bordered table-hover',
-    tbody: '',
     row: 'row',
     th: '',
-    td: '',
     tr: '',
     trEven: '',
     trOdd: '',
@@ -34,7 +34,7 @@ module.exports = function () {
       caret: 'caret'
     },
     pagination: {
-      nav: 'text-center',
+      nav: '',
       count: '',
       wrapper: '',
       list: 'pagination',

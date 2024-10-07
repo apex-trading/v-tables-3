@@ -10,9 +10,10 @@
 </template>
 
 <script>
-    import VtDateFilter from 'vue-tables-2/compiled/components/VtDateFilter'
-    import VtListFilter from 'vue-tables-2/compiled/components/VtListFilter'
-    import VtTextFilter from 'vue-tables-2/compiled/components/VtTextFilter'
+    import VtDateFilter from 'v-tables-3/compiled/components/VtDateFilter'
+    import VtListFilter from 'v-tables-3/compiled/components/VtListFilter'
+    import VtTextFilter from 'v-tables-3/compiled/components/VtTextFilter'
+    import {h} from 'vue'
 
     export default {
         name: "MyFiltersRow",
@@ -23,7 +24,7 @@
             VtTextFilter,
             vnodes: {
                 functional: true,
-                render: (h, ctx) => ctx.props.vnodes
+                render: (ctx) => h(ctx.$attrs.vnodes)
             }
         }
     }

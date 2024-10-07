@@ -12,9 +12,9 @@ module.exports = function (event, payload) {
 
   this.$parent.$emit(event, payload);
 
-  _bus["default"].$emit("vue-tables.".concat(event), payload);
+  _bus["default"].emit("vue-tables.".concat(event), payload);
 
   if (this.name) {
-    _bus["default"].$emit("vue-tables.".concat(this.name, ".").concat(event), payload);
+    _bus["default"].emit("vue-tables.".concat(this.name, ".").concat(event), payload);
   }
 };

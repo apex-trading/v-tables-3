@@ -1,5 +1,10 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = install;
+
 var _merge = _interopRequireDefault(require("merge"));
 
 var _data2 = _interopRequireDefault(require("./state/data"));
@@ -24,11 +29,11 @@ var _created = require("./mixins/created");
 
 var provide = require("./mixins/provide");
 
-var watch = require("./mixins/watch");
-
-exports.install = function (Vue, globalOptions, useVuex) {
-  var theme = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "bootstrap3";
-  var componentsOverride = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+function install(app, globalOptions) {
+  var theme = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "bootstrap3";
+  var componentsOverride = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  var themeOverride = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  var useVuex = false;
   var state = useVuex ? (0, _vuex["default"])("server") : (0, _normal["default"])();
 
   var server = _merge["default"].recursive(true, (0, _table["default"])(), {
@@ -57,7 +62,7 @@ exports.install = function (Vue, globalOptions, useVuex) {
     provide: provide,
     created: function created() {
       if (!this.opts.requestFunction && !this.url) {
-        throw 'vue-tables-2: you must provide either a "url" prop or a custom request function. Aborting';
+        throw 'vue-tables-3: you must provide either a "url" prop or a custom request function. Aborting';
       }
 
       _created(this);
@@ -89,7 +94,7 @@ exports.install = function (Vue, globalOptions, useVuex) {
       this._setFiltersDOM(this.query);
 
       if (this.opts.resizableColumns) {
-        (0, _resizeableColumns["default"])(this.$el.querySelector("table"), this.hasChildRow, this.opts.childRowTogglerFirst, this.opts.resizableColumns, this.opts.stickyHeader);
+        (0, _resizeableColumns["default"])(this.refs.table, this.hasChildRow, this.opts.childRowTogglerFirst, this.resizableColumns, this.opts.stickyHeader);
       } // this._setColumnsDropdownCloseListener();
 
 
@@ -98,14 +103,14 @@ exports.install = function (Vue, globalOptions, useVuex) {
       if (this.options.initialPage) this.setPage(this.options.initialPage, true);
     },
     data: function data() {
+      var Theme = typeof theme === 'string' ? _themes["default"][theme] : theme();
       return _merge["default"].recursive(_data(), {
         source: "server",
         loading: true,
-        initialRequestSent: false,
         lastKeyStrokeAt: false,
         globalOptions: globalOptions,
         componentsOverride: componentsOverride,
-        theme: typeof theme === 'string' ? _themes["default"][theme] : theme()
+        theme: _merge["default"].recursive(Theme, themeOverride)
       }, (0, _data2["default"])(useVuex, "server", this.options.initialPage));
     },
     methods: {
@@ -160,11 +165,11 @@ exports.install = function (Vue, globalOptions, useVuex) {
         this.activeState = true;
       }
     },
-    watch: (0, _merge["default"])({
+    watch: {
       url: function url() {
         this.refresh();
       }
-    }, watch),
+    },
     computed: {
       totalPages: require("./computed/total-pages"),
       filteredQuery: require("./computed/filtered-query"),
@@ -174,7 +179,9 @@ exports.install = function (Vue, globalOptions, useVuex) {
     }
   }, state);
 
-  Vue.component("r-l-server-table", server);
-  Vue.component("v-server-table", _VtServerTable["default"]);
+  var comp = (0, _VtServerTable["default"])(server);
+  app.component("v-server-table", comp);
   return _VtServerTable["default"];
-};
+}
+
+;

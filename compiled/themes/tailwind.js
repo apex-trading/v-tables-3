@@ -4,7 +4,7 @@ module.exports = function () {
   return {
     framework: 'tailwind',
     table: 'table-auto',
-    tbody: '',
+    thead: '',
     th: 'border px-4 py-2',
     td: 'border px-4 py-2',
     tr: '',
@@ -37,7 +37,7 @@ module.exports = function () {
       text: 'text-left ml-1'
     },
     pagination: {
-      nav: 'mt-1 text-center',
+      nav: 'mt-1',
       count: 'text-center',
       wrapper: 'pagination',
       list: 'flex',
@@ -46,7 +46,7 @@ module.exports = function () {
       next: '',
       prev: '',
       active: 'bg-blue-700 text-white',
-      disabled: 'text-gray-400'
+      disabled: 'text-gray-400 cursor-not-allowed'
     }
   };
 };

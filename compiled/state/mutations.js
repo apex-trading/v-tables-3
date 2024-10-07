@@ -24,10 +24,6 @@ function _default(self) {
     state.count = count;
   });
   return _merge["default"].recursive(true, (_merge$recursive = {}, _defineProperty(_merge$recursive, "".concat(self.name, "/PAGINATE"), function PAGINATE(state, page) {
-    if (page === 0) {
-      page = 1;
-    }
-
     state.page = page;
     self.updateState('page', page);
     if (self.source == 'server') self.getData();
@@ -57,27 +53,12 @@ function _default(self) {
         customQueries = _ref4.customQueries,
         limit = _ref4.limit,
         orderBy = _ref4.orderBy;
-
-    if (customQueries) {
-      state.customQueries = customQueries;
-    }
-
-    if (typeof query !== 'undefined') {
-      state.query = query;
-    }
-
-    if (page) {
-      state.page = page;
-    }
-
-    if (limit) {
-      state.limit = limit;
-    }
-
-    if (typeof orderBy !== 'undefined') {
-      state.ascending = orderBy.ascending;
-      state.sortBy = orderBy.column;
-    }
+    state.customQueries = customQueries;
+    state.query = query;
+    state.page = page;
+    state.limit = limit;
+    state.ascending = orderBy.ascending;
+    state.sortBy = orderBy.column;
   }), _defineProperty(_merge$recursive, "".concat(self.name, "/SET_LIMIT"), function SET_LIMIT(state, limit) {
     state.page = 1;
     self.updateState('page', 1);
@@ -89,7 +70,5 @@ function _default(self) {
     state.ascending = ascending;
     state.sortBy = column;
     if (self.source == 'server') self.getData();
-  }), _defineProperty(_merge$recursive, "".concat(self.name, "/SET_CLIENT_DATA"), function SET_CLIENT_DATA(state, data) {
-    state.data = data;
   }), _defineProperty(_merge$recursive, "".concat(self.name, "/SORTED"), function SORTED(state, data) {}), _defineProperty(_merge$recursive, "".concat(self.name, "/ROW_CLICK"), function ROW_CLICK(state, row) {}), _defineProperty(_merge$recursive, "".concat(self.name, "/FILTER"), function FILTER(state, row) {}), _defineProperty(_merge$recursive, "".concat(self.name, "/LIMIT"), function LIMIT(state, limit) {}), _defineProperty(_merge$recursive, "".concat(self.name, "/INPUT"), function INPUT(state, payload) {}), _defineProperty(_merge$recursive, "".concat(self.name, "/UPDATE"), function UPDATE(state, payload) {}), _defineProperty(_merge$recursive, "".concat(self.name, "/LOADING"), function LOADING(state, payload) {}), _defineProperty(_merge$recursive, "".concat(self.name, "/LOADED"), function LOADED(state, payload) {}), _defineProperty(_merge$recursive, "".concat(self.name, "/SELECT"), function SELECT(state, payload) {}), _merge$recursive), extra);
 }

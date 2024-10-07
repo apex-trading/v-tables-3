@@ -17,6 +17,7 @@ module.exports = function () {
     perPageValues: [10, 25, 50, 100],
     groupBy: false,
     collapseGroups: false,
+    toggleGroups: false,
     destroyEventBus: false,
     sendEmptyFilters: false,
     params: {},
@@ -73,7 +74,7 @@ module.exports = function () {
     headings: {},
     headingsTooltips: {},
     stickyHeader: false,
-    stickHeaderBackground: 'white',
+    stickyHeaderBackground: 'white',
     selectable: {
       selectAllMode: 'all',
       programmatic: false
@@ -89,7 +90,6 @@ module.exports = function () {
     },
     childRow: false,
     childRowTogglerFirst: true,
-    disabledChildRows: false,
     showChildRowToggler: true,
     uniqueKey: "id",
     requestFunction: false,

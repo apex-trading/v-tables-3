@@ -9,7 +9,7 @@ var _merge = _interopRequireDefault(require("merge"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _default(source) {
   var extra = source == 'server' ? serverExtra() : clientExtra();
@@ -107,34 +107,6 @@ function serverExtra() {
         setTimeout(function () {
           this.dispatch('loaded', data);
         }.bind(this), 0);
-      },
-      setRequestParams: function setRequestParams() {
-        var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        var sendRequest = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-        var data = this.convertParams(params);
-
-        if (typeof data.query !== 'undefined') {
-          this._setFiltersDOM(data.query);
-        }
-
-        this.commit('SET_STATE', data);
-
-        if (sendRequest) {
-          this.getData();
-        }
-      },
-      convertParams: function convertParams(params) {
-        if (params.order) {
-          params.orderBy = params.order;
-          delete params.order;
-        }
-
-        if (typeof params.filters !== 'undefined') {
-          params.query = params.filters;
-          delete params.filters;
-        }
-
-        return params;
       }
     }
   };

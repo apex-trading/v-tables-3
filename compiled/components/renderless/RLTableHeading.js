@@ -4,6 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
+
+var getThStyle = require('../../mixins/get-th-style');
+
 var _default = {
   name: 'RLTableHeading',
   props: ['column'],
@@ -17,21 +20,22 @@ var _default = {
     };
   },
   inject: ['opts', 'theme', 'sortableClass', 'getHeadingTooltip', 'getHeading', 'orderByColumn', 'componentsOverride', 'tabIndex'],
+  mixins: [getThStyle],
   render: function render(h) {
     var _this2 = this;
 
-    return this.$scopedSlots["default"]({
+    return this.$slots["default"]({
       opts: this.opts(),
       thAttrs: {
-        "class": "".concat(this.sortableClass(this.column), " ").concat(this.theme.th).trim(),
+        "class": this.getClasses(),
         tabIndex: this.tabIndex(),
-        style: this.getStyle(),
+        style: this.getThStyle(),
         title: this.getHeadingTooltip(this.column)
       },
       thEvents: {
         keypress: function keypress(e) {
           if (e.key === "Enter") {
-            this.orderByColumn(this.column, e);
+            _this2.orderByColumn(_this2.column, e);
           }
         },
         click: function click(e) {
@@ -48,15 +52,11 @@ var _default = {
     });
   },
   methods: {
-    getStyle: function getStyle() {
-      var cls = '';
+    getClasses: function getClasses() {
+      var cls = this.sortableClass(this.column);
 
-      if (this.opts().stickyHeader) {
-        cls += 'position:sticky; top:0;';
-      }
-
-      if (this.opts().stickyHeaderBackground) {
-        cls += "background:".concat(this.opts().stickyHeaderBackground, ";");
+      if (this.theme.th) {
+        cls += ' ' + this.theme.th;
       }
 
       return cls;

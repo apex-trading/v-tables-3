@@ -36,7 +36,7 @@ module.exports = function () {
       range = {};
     }
 
-    el = $(that.$el).find("#VueTables__" + $.escapeSelector(column) + "-filter");
+    el = $(that.refs.filters[column]);
     columnOptions = typeof that.opts.datepickerPerColumnOptions[column] !== 'undefined' ? that.opts.datepickerPerColumnOptions[column] : {};
     columnOptions = merge.recursive(columnOptions, {
       locale: {
@@ -47,12 +47,6 @@ module.exports = function () {
 
     if (columnOptions.ranges === false) {
       dpOptions.ranges = {};
-    }
-
-    var drp = el.data('daterangerpicker');
-
-    if (drp) {
-      drp.remove();
     }
 
     el.daterangepicker(merge.recursive(dpOptions, columnOptions, range));

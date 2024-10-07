@@ -1,4 +1,5 @@
 export default {
+    emits:['intersect'],
     data: () => ({
         observer: null
     }),
@@ -11,12 +12,12 @@ export default {
                 this.$emit("intersect");
             }
         }, {
-            root: this.$parent.$el.querySelector('.table-responsive'),
+            root: this.$refs.tablewrapper
         });
 
         this.observer.observe(this.$el);
     },
-    destroyed() {
+    unmounted() {
         this.observer.disconnect();
     },
 };

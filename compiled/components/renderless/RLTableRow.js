@@ -15,26 +15,22 @@ var _default = {
       row: function row() {
         return _this.row;
       },
-      index: function index() {
-        return _this.index;
-      }
+      index: this.index
     };
   },
   render: function render() {
-    return this.$scopedSlots["default"]({
+    return this.$slots["default"]({
       opts: this.opts(),
       columns: this.allColumns(),
       hasChildRow: this.hasChildRow(),
       selectable: this.opts().selectable.mode && !this.opts().selectable.programmatic,
       rowId: this.row[this.opts().uniqueKey],
-      row: this.row,
       rowAttrs: {
         "class": this.getClass(),
         attrs: this.opts().rowAttributesCallback ? this.opts().rowAttributesCallback(this.row) : {}
       },
       rowEvents: {
-        click: this.rowWasClicked.bind(this, this.row, this.index),
-        dblclick: this.rowWasClicked.bind(this, this.row, this.index)
+        click: this.rowWasClicked.bind(this, this.row, this.index)
       },
       childRowTogglerFirst: this.hasChildRow() && this.opts().showChildRowToggler && this.opts().childRowTogglerFirst,
       childRowTogglerLast: this.hasChildRow() && this.opts().showChildRowToggler && !this.opts().childRowTogglerFirst,

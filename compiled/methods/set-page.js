@@ -1,7 +1,6 @@
 "use strict";
 
-module.exports = function (page) {
-  var preventRequest = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+module.exports = function (page, preventRequest) {
   page = parseInt(page);
 
   if (page < 1) {

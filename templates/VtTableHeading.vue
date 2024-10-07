@@ -11,7 +11,8 @@
 </template>
 
 <script>
-    import VtSortControl from "vue-tables-2/compiled/components/VtSortControl";
+    import VtSortControl from "v-tables-3/compiled/components/VtSortControl";
+    import {h} from "vue"
 
     export default {
         name: "VtTableHeading",
@@ -19,7 +20,7 @@
             VtSortControl,
             vnodes: {
                 functional: true,
-                render: (h, ctx) => typeof ctx.props.vnodes === 'object' ? ctx.props.vnodes : [ctx.props.vnodes]
+                render: (ctx) => typeof ctx.$attrs.vnodes === 'object' ? h(ctx.$attrs.vnodes) : [h(ctx.$attrs.vnodes)]
             }
         },
         props: ['props']
