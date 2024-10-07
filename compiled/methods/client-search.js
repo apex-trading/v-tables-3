@@ -49,6 +49,9 @@ module.exports = function (data, e) {
   var dateFormat;
   var filterByDate;
   var isListFilter;
+  console.log("data", data);
+  console.log("customFilters", this.opts.customFilters);
+  console.log("customQueries", this.customQueries);
   var data = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
   console.log("called");
   console.log(totalQueries);
