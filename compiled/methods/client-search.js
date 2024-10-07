@@ -49,10 +49,11 @@ module.exports = function (data, e) {
   var dateFormat;
   var filterByDate;
   var isListFilter;
-  console.log("data", data);
+  console.log("data before", data.length);
   console.log("customFilters", this.opts.customFilters);
   console.log("customQueries", this.customQueries);
   var data = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
+  console.log("data after", data.length);
   console.log("called");
   console.log(totalQueries);
   if (!totalQueries) return data;
