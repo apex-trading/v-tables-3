@@ -60,6 +60,7 @@ module.exports = function (data, e) {
   }
   return data.filter(function (row, index) {
     found = 0;
+    console.log("filterableColumns", this.filterableColumns);
     this.filterableColumns.forEach(function (column) {
       filterByDate = this.opts.dateColumns.indexOf(column) > -1 && this.opts.filterByColumn;
       isListFilter = this.isListFilter(column) && this.opts.filterByColumn;
