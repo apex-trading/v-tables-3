@@ -56,7 +56,9 @@ module.exports = function (data, e) {
   console.log("data after", data.length);
   console.log("called");
   console.log(totalQueries);
-  if (!totalQueries) return data;
+  if (!totalQueries) return data;else if (totalQueries == 0) {
+    return data;
+  }
   return data.filter(function (row, index) {
     found = 0;
     this.filterableColumns.forEach(function (column) {
