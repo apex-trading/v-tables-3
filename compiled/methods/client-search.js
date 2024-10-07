@@ -11,8 +11,6 @@ var _isValidMomentObject = require("../helpers/is-valid-moment-object");
 
 var _customFilters = _interopRequireDefault(require("../filters/custom-filters"));
 
-var _moment = _interopRequireDefault(require("moment"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -129,8 +127,8 @@ function foundMatch(query, value, isListFilter) {
 
 
   if ((0, _isValidMomentObject.is_valid_moment_object)(value) && _typeof(query) === "object" && query.start && query.end) {
-    var start = (0, _moment["default"])(query.start, "YYYY-MM-DD HH:mm:ss");
-    var end = (0, _moment["default"])(query.end, "YYYY-MM-DD HH:mm:ss");
+    var start = moment(query.start, "YYYY-MM-DD HH:mm:ss");
+    var end = moment(query.end, "YYYY-MM-DD HH:mm:ss");
     return value.isBetween(start, end, null, "[]"); // Inclusive date range comparison
   } // Handle object comparisons (recursive check for nested properties)
 
