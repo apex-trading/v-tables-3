@@ -78,7 +78,7 @@ module.exports = function (data, e) {
 
       if (currentQuery) {
         console.log("in current query");
-        console.log("this.opts.filterAlgorithm", this.opts.filterAlgorithm);
+        console.log("this.opts.filterAlgorithm", this.opts.filterAlgorithm, column);
 
         if (this.opts.filterAlgorithm[column]) {
           console.log("in filter algo");
