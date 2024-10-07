@@ -2,18 +2,18 @@
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-var object_filled_keys_count = require('../helpers/object-filled-keys-count');
+var object_filled_keys_count = require("../helpers/object-filled-keys-count");
 
-var is_valid_moment_object = require('../helpers/is-valid-moment-object');
+var is_valid_moment_object = require("../helpers/is-valid-moment-object");
 
-var filterByCustomFilters = require('../filters/custom-filters');
+var filterByCustomFilters = require("../filters/custom-filters");
 
 module.exports = function (data, e) {
   if (e) {
     var _query = this.query;
     this.setPage(1, true);
     var name = this.getName(e.target.name);
-    var value = _typeof(e.target.value) === 'object' ? e.target.value : '' + e.target.value;
+    var value = _typeof(e.target.value) === "object" ? e.target.value : "" + e.target.value;
 
     if (name) {
       _query[name] = value;
@@ -21,17 +21,17 @@ module.exports = function (data, e) {
       _query = value;
     }
 
-    this.vuex ? this.commit('SET_FILTER', _query) : this.query = _query;
-    this.updateState('query', _query);
+    this.vuex ? this.commit("SET_FILTER", _query) : this.query = _query;
+    this.updateState("query", _query);
 
     if (name) {
-      this.dispatch('filter', {
+      this.dispatch("filter", {
         name: name,
         value: value
       });
       this.dispatch("filter::".concat(name), value);
     } else {
-      this.dispatch('filter', value);
+      this.dispatch("filter", value);
     }
   }
 
@@ -50,6 +50,7 @@ module.exports = function (data, e) {
   var filterByDate;
   var isListFilter;
   var data = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
+  console.log(totalQueries);
   if (!totalQueries) return data;
   return data.filter(function (row, index) {
     found = 0;
@@ -79,14 +80,14 @@ module.exports = function (data, e) {
 };
 
 function setCurrentQuery(query) {
-  if (!query) return '';
-  if (typeof query == 'string') return query.toLowerCase(); // Date Range
+  if (!query) return "";
+  if (typeof query == "string") return query.toLowerCase(); // Date Range
 
   return query;
 }
 
 function foundMatch(query, value, isListFilter) {
-  if (['string', 'number', 'boolean'].indexOf(_typeof(value)) > -1) {
+  if (["string", "number", "boolean"].indexOf(_typeof(value)) > -1) {
     value = String(value).toLowerCase();
   } // List Filter
 
@@ -96,18 +97,18 @@ function foundMatch(query, value, isListFilter) {
   } //Text Filter
 
 
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     return value.indexOf(query) > -1;
   } // Date range
 
 
   if (is_valid_moment_object(value)) {
-    var start = moment(query.start, 'YYYY-MM-DD HH:mm:ss');
-    var end = moment(query.end, 'YYYY-MM-DD HH:mm:ss');
+    var start = moment(query.start, "YYYY-MM-DD HH:mm:ss");
+    var end = moment(query.end, "YYYY-MM-DD HH:mm:ss");
     return value >= start && value <= end;
   }
 
-  if (_typeof(value) === 'object') {
+  if (_typeof(value) === "object") {
     for (var key in value) {
       if (foundMatch(query, value[key])) return true;
     }
