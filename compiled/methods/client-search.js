@@ -50,6 +50,7 @@ module.exports = function (data, e) {
   var filterByDate;
   var isListFilter;
   var data = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
+  console.log("called");
   console.log(totalQueries);
   if (!totalQueries) return data;
   return data.filter(function (row, index) {
