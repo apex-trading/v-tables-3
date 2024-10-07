@@ -55,33 +55,34 @@ module.exports = function (data, e) {
   var data = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
   console.log("data after", data.length);
   console.log("totalQueries", totalQueries);
-  if (!totalQueries) return data;
-  this.filterableColumns.forEach(function (column) {
-    console.log("Filtering by column:", column);
-    filterByDate = this.opts.dateColumns.indexOf(column) > -1 && this.opts.filterByColumn;
-    isListFilter = this.isListFilter(column) && this.opts.filterByColumn;
-    dateFormat = this.dateFormat(column);
-    value = this._getValue(row, column);
-    console.log("Value for column", column, ":", value);
+  if (!totalQueries) return data;else if (totalQueries == 0) {
+    return data;
+  }
+  return data.filter(function (row, index) {
+    found = 0;
+    this.filterableColumns.forEach(function (column) {
+      filterByDate = this.opts.dateColumns.indexOf(column) > -1 && this.opts.filterByColumn;
+      isListFilter = this.isListFilter(column) && this.opts.filterByColumn;
+      dateFormat = this.dateFormat(column);
+      value = this._getValue(row, column);
 
-    if (is_valid_moment_object(value) && !filterByDate) {
-      value = value.format(dateFormat);
-    }
+      if (is_valid_moment_object(value) && !filterByDate) {
+        value = value.format(dateFormat);
+      }
 
-    currentQuery = this.opts.filterByColumn ? query[column] : query;
-    currentQuery = setCurrentQuery(currentQuery);
-    console.log("Current query for column", column, ":", currentQuery);
+      currentQuery = this.opts.filterByColumn ? query[column] : query;
+      currentQuery = setCurrentQuery(currentQuery);
 
-    if (currentQuery) {
-      if (this.opts.filterAlgorithm[column]) {
-        if (this.opts.filterAlgorithm[column].call(this.$parent.$parent, row, this.opts.filterByColumn ? query[column] : query)) found++;
-      } else {
-        if (foundMatch(currentQuery, value, isListFilter)) {
-          found++;
-          console.log("Found match in column:", column);
+      if (currentQuery) {
+        if (this.opts.filterAlgorithm[column]) {
+          if (this.opts.filterAlgorithm[column].call(this.$parent.$parent, row, this.opts.filterByColumn ? query[column] : query)) found++;
+        } else {
+          if (foundMatch(currentQuery, value, isListFilter)) found++;
         }
       }
-    }
+    }.bind(this));
+    console.log(found, totalQueries);
+    return found >= totalQueries;
   }.bind(this));
 };
 
@@ -93,31 +94,26 @@ function setCurrentQuery(query) {
 }
 
 function foundMatch(query, value, isListFilter) {
-  console.log("Matching query:", query, "with value:", value);
-
   if (["string", "number", "boolean"].indexOf(_typeof(value)) > -1) {
     value = String(value).toLowerCase();
   } // List Filter
 
 
   if (isListFilter) {
-    console.log("Using list filter, comparing:", value, "with", query);
     return value == query;
-  } // Text Filter
+  } //Text Filter
 
 
   if (typeof value === "string") {
     return value.indexOf(query) > -1;
-  } // Date range filter
+  } // Date range
 
 
   if (is_valid_moment_object(value)) {
     var start = moment(query.start, "YYYY-MM-DD HH:mm:ss");
     var end = moment(query.end, "YYYY-MM-DD HH:mm:ss");
-    console.log("Date range:", start, "-", end, "for value:", value);
     return value >= start && value <= end;
-  } // Check objects for nested properties
-
+  }
 
   if (_typeof(value) === "object") {
     for (var key in value) {
@@ -127,5 +123,5 @@ function foundMatch(query, value, isListFilter) {
     return false;
   }
 
-  return false;
+  return value >= start && value <= end;
 }
