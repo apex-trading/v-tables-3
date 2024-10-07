@@ -68,14 +68,19 @@ module.exports = function (data, e) {
       value = this._getValue(row, column);
 
       if (is_valid_moment_object(value) && !filterByDate) {
+        console.log("inside is_valid_moment_object");
         value = value.format(dateFormat);
       }
 
       currentQuery = this.opts.filterByColumn ? query[column] : query;
       currentQuery = setCurrentQuery(currentQuery);
+      console.log("currentQuery", currentQuery);
 
       if (currentQuery) {
+        console.log("in current query");
+
         if (this.opts.filterAlgorithm[column]) {
+          console.log("in filter algo");
           if (this.opts.filterAlgorithm[column].call(this.$parent.$parent, row, this.opts.filterByColumn ? query[column] : query)) found++;
         } else {
           if (foundMatch(currentQuery, value, isListFilter)) found++;
