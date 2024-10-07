@@ -55,9 +55,7 @@ module.exports = function (data, e) {
   var data = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
   console.log("data after", data.length);
   console.log("totalQueries", totalQueries);
-  if (!totalQueries) return data;else if (totalQueries == 0) {
-    return data;
-  }
+  if (!totalQueries) return data;
   return data.filter(function (row, index) {
     found = 0;
     console.log("filterableColumns", this.filterableColumns);
@@ -85,6 +83,7 @@ module.exports = function (data, e) {
           if (this.opts.filterAlgorithm[column].call(this.$parent.$parent, row, this.opts.filterByColumn ? query[column] : query)) found++;
         } else {
           if (foundMatch(currentQuery, value, isListFilter)) found++;
+          return data;
         }
       }
     }.bind(this));
