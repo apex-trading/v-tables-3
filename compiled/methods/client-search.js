@@ -48,10 +48,12 @@ module.exports = function (data, e) {
   var currentQuery;
   var dateFormat;
   var filterByDate;
-  var isListFilter;
-  var data = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
-  if (!totalQueries) return data;
-  return data.filter(function (row, index) {
+  var isListFilter; // First apply custom filters
+
+  var filteredData = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
+  if (!totalQueries) return filteredData; // Apply column-based filtering
+
+  return filteredData.filter(function (row, index) {
     found = 0;
     this.filterableColumns.forEach(function (column) {
       filterByDate = this.opts.dateColumns.indexOf(column) > -1 && this.opts.filterByColumn;
@@ -115,5 +117,5 @@ function foundMatch(query, value, isListFilter) {
     return false;
   }
 
-  return value >= start && value <= end;
+  return value;
 }
