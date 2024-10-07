@@ -1,45 +1,28 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = _default;
-
-var _objectFilledKeysCount = require("../helpers/object-filled-keys-count");
-
-var _isValidMomentObject = require("../helpers/is-valid-moment-object");
-
-var _customFilters = _interopRequireDefault(require("../filters/custom-filters"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _default(data, e) {
-  var _this = this;
+var object_filled_keys_count = require("../helpers/object-filled-keys-count");
 
+var is_valid_moment_object = require("../helpers/is-valid-moment-object");
+
+var filterByCustomFilters = require("../filters/custom-filters");
+
+module.exports = function (data, e) {
   if (e) {
-    var _query = this.query || {}; // Handle input event and query update
-
-
+    var _query = this.query;
     this.setPage(1, true);
     var name = this.getName(e.target.name);
-    var value = _typeof(e.target.value) === "object" ? e.target.value : String(e.target.value || ""); // Update query based on the input field
+    var value = _typeof(e.target.value) === "object" ? e.target.value : "" + e.target.value;
 
     if (name) {
       _query[name] = value;
     } else {
       _query = value;
-    } // Vuex or local state management (reactive handling)
-
-
-    if (this.vuex) {
-      this.commit("SET_FILTER", _query);
-    } else {
-      this.query = _query;
     }
 
-    this.updateState("query", _query); // Dispatching filter event (emit or custom event handling)
+    this.vuex ? this.commit("SET_FILTER", _query) : this.query = _query;
+    this.updateState("query", _query);
 
     if (name) {
       this.dispatch("filter", {
@@ -52,92 +35,85 @@ function _default(data, e) {
     }
   }
 
-  var query = this.query || {};
-  var totalQueries = this.opts.filterByColumn ? (0, _objectFilledKeysCount.object_filled_keys_count)(query) : 1;
-  if (!this.opts) return data; // Apply custom filters (external filters applied before default filters)
+  var query = this.query;
+  var totalQueries = !query ? 0 : 1;
+  if (!this.opts) return data;
 
-  data = (0, _customFilters["default"])(data, this.opts.customFilters, this.customQueries); // If no valid queries, return original data set
+  if (this.opts.filterByColumn) {
+    totalQueries = object_filled_keys_count(query);
+  }
 
-  if (!totalQueries) return data; // Filter the data rows based on the column query filters
+  var value;
+  var found;
+  var currentQuery;
+  var dateFormat;
+  var filterByDate;
+  var isListFilter;
+  var data = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
+  if (!totalQueries) return data;
+  return data.filter(function (row, index) {
+    found = 0;
+    this.filterableColumns.forEach(function (column) {
+      filterByDate = this.opts.dateColumns.indexOf(column) > -1 && this.opts.filterByColumn;
+      isListFilter = this.isListFilter(column) && this.opts.filterByColumn;
+      dateFormat = this.dateFormat(column);
+      value = this._getValue(row, column);
 
-  return data.filter(function (row) {
-    var found = 0;
-
-    _this.filterableColumns.forEach(function (column) {
-      var value = _this._getValue(row, column); // Get the value of the current column in the row
-
-
-      var filterByDate = _this.opts.dateColumns.includes(column) && _this.opts.filterByColumn;
-
-      var isListFilter = _this.isListFilter(column) && _this.opts.filterByColumn;
-
-      var dateFormat = _this.dateFormat(column); // Handle date formatting if the column contains moment objects
-
-
-      if ((0, _isValidMomentObject.is_valid_moment_object)(value) && !filterByDate) {
+      if (is_valid_moment_object(value) && !filterByDate) {
         value = value.format(dateFormat);
       }
 
-      var currentQuery = _this.opts.filterByColumn ? query[column] : query;
-      currentQuery = setCurrentQuery(currentQuery); // Check for a match if a valid query exists
+      currentQuery = this.opts.filterByColumn ? query[column] : query;
+      currentQuery = setCurrentQuery(currentQuery);
 
       if (currentQuery) {
-        if (_this.opts.filterAlgorithm && _this.opts.filterAlgorithm[column]) {
-          // Use custom filter algorithm if specified
-          if (_this.opts.filterAlgorithm[column].call(_this.$parent, row, currentQuery)) {
-            found++;
-          }
+        if (this.opts.filterAlgorithm[column]) {
+          if (this.opts.filterAlgorithm[column].call(this.$parent.$parent, row, this.opts.filterByColumn ? query[column] : query)) found++;
         } else {
-          // Default matching logic
-          if (foundMatch(currentQuery, value, isListFilter)) {
-            found++;
-          }
+          if (foundMatch(currentQuery, value, isListFilter)) found++;
         }
       }
-    }); // Return true if the number of matched queries equals or exceeds the total queries
-
-
+    }.bind(this));
     return found >= totalQueries;
-  });
-} // Helper function to standardize the query for matching
-
+  }.bind(this));
+};
 
 function setCurrentQuery(query) {
   if (!query) return "";
-  if (typeof query === "string") return query.toLowerCase(); // Convert string queries to lowercase
+  if (typeof query == "string") return query.toLowerCase(); // Date Range
 
-  return query; // Return query as is (for object/array queries)
-} // Match the query to the row's value, considering list filters and text matching
-
+  return query;
+}
 
 function foundMatch(query, value, isListFilter) {
-  if (["string", "number", "boolean"].includes(_typeof(value))) {
-    value = String(value).toLowerCase(); // Convert value to string and lowercase for comparison
-  } // Handle list filters (exact match required)
+  if (["string", "number", "boolean"].indexOf(_typeof(value)) > -1) {
+    value = String(value).toLowerCase();
+  } // List Filter
 
 
   if (isListFilter) {
     return value == query;
-  } // Handle text filters (contains matching)
+  } //Text Filter
 
 
   if (typeof value === "string") {
-    return value.includes(query);
-  } // Handle date range filters
+    return value.indexOf(query) > -1;
+  } // Date range
 
 
-  if ((0, _isValidMomentObject.is_valid_moment_object)(value) && _typeof(query) === "object" && query.start && query.end) {
+  if (is_valid_moment_object(value)) {
     var start = moment(query.start, "YYYY-MM-DD HH:mm:ss");
     var end = moment(query.end, "YYYY-MM-DD HH:mm:ss");
-    return value.isBetween(start, end, null, "[]"); // Inclusive date range comparison
-  } // Handle object comparisons (recursive check for nested properties)
-
-
-  if (_typeof(value) === "object" && !Array.isArray(value)) {
-    return Object.keys(value).some(function (key) {
-      return foundMatch(query, value[key], isListFilter);
-    });
+    return value >= start && value <= end;
   }
 
-  return false; // Return false if no match found
+  if (_typeof(value) === "object") {
+    for (var key in value) {
+      if (foundMatch(query, value[key])) return true;
+    }
+
+    return false;
+  }
+
+  return value >= start && value <= end;
 }
