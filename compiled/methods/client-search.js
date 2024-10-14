@@ -72,23 +72,16 @@ module.exports = function (data, e) {
       currentQuery = setCurrentQuery(currentQuery);
 
       if (currentQuery) {
-        console.log('column', column); // if there is a custom filter in the custom filters array that matches the current column name, return the data. It will have already been filtered.
-
+        // if there is a custom filter in the custom filters array that matches the current column name, return the data. It will have already been filtered.
         var customFilter = this.opts.customFilters.find(function (filter) {
           return filter.name === column;
-        }); // console.log('customFilter', customFilter);
-        // console.log('this.opts.customFilters', this.opts.customFilters);
+        });
 
         if (customFilter && customFilter.name) {
-          console.log('customFilter found'); // return true;
-
           found++;
         } else if (this.opts.filterAlgorithm[column]) {
-          console.log('filterAlgorithm found');
-          console.log('this.opts.filterAlgorithm[column]', this.opts.filterAlgorithm[column]);
           if (this.opts.filterAlgorithm[column].call(this.$parent.$parent, row, this.opts.filterByColumn ? query[column] : query)) found++;
         } else {
-          console.log('filterAlgorithm not found');
           if (foundMatch(currentQuery, value, isListFilter)) found++;
         }
       }
