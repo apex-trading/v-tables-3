@@ -51,11 +51,7 @@ module.exports = function (data, e) {
   var isListFilter;
   var dataLength = data.length;
   var data = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
-  if (!totalQueries) return data; // // if a custom filter is applied and matches the column name, return the data
-  // if (this.opts.customFilters && this.opts.customFilters.column) {
-  //   return data;
-  // }
-  // this checks if the data length has changed after custom filters have been applied and only that custom filter is applied.
+  if (!totalQueries) return data; // this checks if the data length has changed after custom filters have been applied and only that custom filter is applied.
   // if (dataLength !== data.length && totalQueries == 1) {
   //   return data;
   // }
@@ -73,9 +69,16 @@ module.exports = function (data, e) {
       }
 
       currentQuery = this.opts.filterByColumn ? query[column] : query;
-      currentQuery = setCurrentQuery(currentQuery); // if a custom filter is applied and matches the column name, return the data. It will have already been filtered.
+      currentQuery = setCurrentQuery(currentQuery);
+      console.log(this.opts.customFilters); // if there is a custom filter in the custom filters array that matches the current column name, return the data. It will have already been filtered.
 
-      if (this.opts.customFilters && this.opts.customFilters.name && column === this.opts.customFilters.name) {
+      var customFilter = this.opts.customFilters.find(function (filter) {
+        return filter.name === column;
+      });
+      console.log('customFilter', customFilter);
+      console.log('this.opts.customFilters', this.opts.customFilters);
+
+      if (customFilter) {
         return true;
       } else if (currentQuery) {
         if (this.opts.filterAlgorithm[column]) {
