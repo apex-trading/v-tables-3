@@ -70,21 +70,20 @@ module.exports = function (data, e) {
 
       currentQuery = this.opts.filterByColumn ? query[column] : query;
       currentQuery = setCurrentQuery(currentQuery);
-      console.log(this.opts.customFilters); // if there is a custom filter in the custom filters array that matches the current column name, return the data. It will have already been filtered.
 
-      var customFilter = this.opts.customFilters.find(function (filter) {
-        return filter.name === column;
-      }); // console.log('customFilter', customFilter);
-      // console.log('this.opts.customFilters', this.opts.customFilters);
+      if (currentQuery) {
+        console.log('column', column); // if there is a custom filter in the custom filters array that matches the current column name, return the data. It will have already been filtered.
 
-      if (customFilter && customFilter.name) {
-        console.log('customFilter found');
-        console.log('column', column);
-        console.log('customFilter.name', customFilter.name); // return true;
-      } else if (currentQuery) {
-        console.log('custom filter not found');
+        var customFilter = this.opts.customFilters.find(function (filter) {
+          return filter.name === column;
+        }); // console.log('customFilter', customFilter);
+        // console.log('this.opts.customFilters', this.opts.customFilters);
 
-        if (this.opts.filterAlgorithm[column]) {
+        if (customFilter && customFilter.name) {
+          console.log('customFilter found'); // return true;
+
+          found++;
+        } else if (this.opts.filterAlgorithm[column]) {
           console.log('filterAlgorithm found');
           console.log('this.opts.filterAlgorithm[column]', this.opts.filterAlgorithm[column]);
           if (this.opts.filterAlgorithm[column].call(this.$parent.$parent, row, this.opts.filterByColumn ? query[column] : query)) found++;
