@@ -74,16 +74,22 @@ module.exports = function (data, e) {
 
       var customFilter = this.opts.customFilters.find(function (filter) {
         return filter.name === column;
-      });
-      console.log('customFilter', customFilter);
-      console.log('this.opts.customFilters', this.opts.customFilters);
+      }); // console.log('customFilter', customFilter);
+      // console.log('this.opts.customFilters', this.opts.customFilters);
 
-      if (customFilter) {
-        return true;
+      if (customFilter && customFilter.name) {
+        console.log('customFilter found');
+        console.log('column', column);
+        console.log('customFilter.name', customFilter.name); // return true;
       } else if (currentQuery) {
+        console.log('custom filter not found');
+
         if (this.opts.filterAlgorithm[column]) {
+          console.log('filterAlgorithm found');
+          console.log('this.opts.filterAlgorithm[column]', this.opts.filterAlgorithm[column]);
           if (this.opts.filterAlgorithm[column].call(this.$parent.$parent, row, this.opts.filterByColumn ? query[column] : query)) found++;
         } else {
+          console.log('filterAlgorithm not found');
           if (foundMatch(currentQuery, value, isListFilter)) found++;
         }
       }
